@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import { ReactComponent as Dice } from './icons/dice.svg';
+import { ReactComponent as Pause } from './icons/pause.svg';
+import { handleFetchData } from './utils/helpers';
 
 function App() {
+  const [result, setResult] = useState({});
+
+  const handleRefetch = () => {
+    handleFetchData("https://api.adviceslip.com/advice").then((response) => setResult(response))
+  }
+
+  useEffect(() => {
+    handleFetchData("https://api.adviceslip.com/advice").then((response) => setResult(response))
+  }, [])
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="app__advice">
+        <h6 className='app__advice-heading'>ADVICE #{result?.slip?.id}</h6>
+        <p className='app__advice-paragraph'>{result?.slip?.advice}</p>
+        <div className="app__advice-horizontal-line-grid">
+          <span className="app__advice-horizontal-line"></span>
+          <Pause />
+          <span className="app__advice-horizontal-line"></span>
+        </div>
+        <button onClick={handleRefetch} type="button" className="app__advice-logo">
+          <Dice />
+        </button>
+
+      </div>
     </div>
   );
 }
